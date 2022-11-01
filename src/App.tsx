@@ -1,24 +1,55 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Formik } from "formik";
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Formik
+        initialValues={{ firstname: '', middlename: '', lastname: '' }}
+        validate={values => {
+          const errors: { firstname: string, middlename: string, lastname: string } = {} as { firstname: string, middlename: string, lastname: string };
+          
+          if(!values.firstname) errors.firstname = 'Required';
+          if(!values.middlename) errors.middlename = 'Required';
+          if(!values.lastname) errors.lastname = 'Required';
+
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          setTimeout(() => {
+            alert(JSON.stringify(values, null, 2));
+            setSubmitting(false);
+          }, 400);
+        }}
+      >
+        {({
+          values,
+          errors,
+          touched,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting,
+        }) => (
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label htmlFor="firstname">First Name</label>
+              <input type="text" name="firstname" value={values.firstname} onChange={handleChange} onBlur={handleBlur} />
+              {errors.firstname && touched.firstname && errors.firstname}
+            </div>
+            <div>
+              <label htmlFor="middlename">Middle Name</label>
+              <input type="text" name="middlename" value={values.middlename} onChange={handleChange} onBlur={handleBlur} />
+              {errors.middlename && touched.middlename && errors.middlename}
+            </div>
+            <div>
+              <label htmlFor="lastname">Last Name</label>
+              <input type="text" name="lastname" value={values.lastname} onChange={handleChange} onBlur={handleBlur} />
+              {errors.lastname && touched.lastname && errors.lastname}
+            </div>
+            <button type="submit" disabled={isSubmitting}>Submit</button>
+          </form>
+        )}
+      </Formik>
     </div>
   );
 }
